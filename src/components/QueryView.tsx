@@ -20,18 +20,20 @@ export function QueryView({
   emptyLabel,
   children,
 }: QueryViewProps) {
-  if (data === undefined) {
-    if (errors.length > 0) return <Notice tone="error">{errors.join('; ')}</Notice>
-    if (loading) return <Notice>{loadingLabel}</Notice>
-  }
-  if (isEmpty) return <Notice>{emptyLabel}</Notice>
+  const hasData = data !== undefined
+  const hasErrors = errors.length > 0
+  const failed = !hasData && hasErrors
+  const partial = hasData && hasErrors
+
+  if (failed) return <Notice tone="error">{errors.join('; ')}</Notice>
+  if (!hasData) return loading ? <Notice>{loadingLabel}</Notice> : null
 
   return (
     <>
-      {data !== undefined && errors.length > 0 && (
+      {partial && (
         <Notice tone="warning">Some data could not be loaded: {errors.join('; ')}</Notice>
       )}
-      {children}
+      {isEmpty ? <Notice>{emptyLabel}</Notice> : children}
     </>
   )
 }

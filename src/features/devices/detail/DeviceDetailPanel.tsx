@@ -24,7 +24,7 @@ export function DeviceDetailPanel({ deviceId }: { deviceId: string }) {
         loading={loading}
         errors={errors}
         data={data}
-        isEmpty={data !== undefined && !detail}
+        isEmpty={!detail}
         loadingLabel="Loading device…"
         emptyLabel="Device not found."
       >
