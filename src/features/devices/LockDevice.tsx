@@ -4,10 +4,11 @@ import { useLockDevice } from './useLockDevice'
 interface LockDeviceProps {
   deviceId: string
   stateId: number | undefined
+  onLocked: () => void
 }
 
-export function LockDevice({ deviceId, stateId }: LockDeviceProps) {
-  const { canLock, locking, error, lock } = useLockDevice(deviceId, stateId)
+export function LockDevice({ deviceId, stateId, onLocked }: LockDeviceProps) {
+  const { canLock, locking, error, lock } = useLockDevice(deviceId, stateId, onLocked)
 
   return (
     <div>

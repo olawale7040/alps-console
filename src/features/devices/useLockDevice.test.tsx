@@ -50,12 +50,13 @@ describe('useLockDevice', () => {
       ),
     )
     const pendingLock = rejectLockWhenReleased()
+    const onLocked = vi.fn()
     const cacheEvents: string[] = []
     const stopListening = subscribeToCache((event) => cacheEvents.push(event.type))
 
     const { result } = renderHook(
       () => ({
-        lock: useLockDevice(DEVICE_ID, ACTIVE_STATE_ID),
+        lock: useLockDevice(DEVICE_ID, ACTIVE_STATE_ID, onLocked),
         patches: useDevicePatches().patches,
       }),
       { wrapper: Providers },
@@ -76,6 +77,7 @@ describe('useLockDevice', () => {
     expect(result.current.patches[DEVICE_ID]).toBeUndefined()
     expect(result.current.lock.locking).toBe(false)
     expect(result.current.lock.canLock).toBe(true)
+    expect(onLocked).not.toHaveBeenCalled()
     expect(cacheEvents).toEqual([])
     stopListening()
   })

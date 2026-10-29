@@ -14,7 +14,7 @@ import type {
   AvailableActionsVariables,
 } from './types'
 
-export function useLockDevice(deviceId: string, stateId: number | undefined) {
+export function useLockDevice(deviceId: string, stateId: number | undefined, onLocked: () => void) {
   const { tenantId } = useTenant()
   const { setPatch, clearPatch } = useDevicePatches()
   const [error, setError] = useState<string>()
@@ -46,6 +46,10 @@ export function useLockDevice(deviceId: string, stateId: number | undefined) {
       commitDeviceState(tenantId, deviceId, LOCKED_STATE)
       clearPatch(deviceId)
       invalidateDevice(tenantId, deviceId)
+      onLocked()
+      // TODO: a network failure (no response at all) is treated like a rejection, but the
+      // server may have applied the lock. Refetch the device on that case instead of
+      // assuming it did not.
     } catch (failure) {
       clearPatch(deviceId)
       setError(errorMessage(failure))

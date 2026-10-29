@@ -1,4 +1,3 @@
-import { useState } from 'react'
 import { Pagination } from '../../components/Pagination'
 import { QueryView } from '../../components/QueryView'
 import { useTenantQuery } from '../../tenancy/useTenantQuery'
@@ -11,8 +10,13 @@ import styles from './DeviceHistory.module.css'
 
 const HISTORY_PAGE_SIZE = 5
 
-export function DeviceHistory({ deviceId }: { deviceId: string }) {
-  const [page, setPage] = useState(1)
+interface DeviceHistoryProps {
+  deviceId: string
+  page: number
+  onPageChange: (page: number) => void
+}
+
+export function DeviceHistory({ deviceId, page, onPageChange }: DeviceHistoryProps) {
   const { data, loading, errors } = useTenantQuery<DeviceHistoryData, DeviceHistoryVariables>(
     LIST_DEVICE_HISTORY,
     {
@@ -52,7 +56,7 @@ export function DeviceHistory({ deviceId }: { deviceId: string }) {
         <Pagination
           page={page}
           pageCount={pageCount(totalCount, HISTORY_PAGE_SIZE)}
-          onPageChange={setPage}
+          onPageChange={onPageChange}
         />
       </QueryView>
     </section>
