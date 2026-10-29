@@ -1,5 +1,5 @@
 import { useDevicePatches, withPatch } from './devicePatches'
-import { formatTimestamp, primaryImei } from './deviceFormat'
+import { formatTimestamp, orUnavailable, primaryImei } from './deviceFormat'
 import type { DeviceSummary } from './types'
 import styles from './DeviceTable.module.css'
 
@@ -15,14 +15,14 @@ export function DeviceTable({ devices, selectedDeviceId, busy, onSelect }: Devic
   const rows = devices.map((device) => withPatch(device, patches))
 
   return (
-    <table className={styles.table} aria-busy={busy}>
+    <table className={styles.table} aria-label="Device list" aria-busy={busy}>
       <thead>
         <tr>
-          <th>Serial number</th>
-          <th>IMEI</th>
-          <th>Model</th>
-          <th>State</th>
-          <th>Last check-in</th>
+          <th scope="col">Serial number</th>
+          <th scope="col">IMEI</th>
+          <th scope="col">Model</th>
+          <th scope="col">State</th>
+          <th scope="col">Last check-in</th>
         </tr>
       </thead>
       <tbody>
@@ -30,12 +30,12 @@ export function DeviceTable({ devices, selectedDeviceId, busy, onSelect }: Devic
           <tr key={device.id} aria-current={device.id === selectedDeviceId || undefined}>
             <td>
               <button type="button" className={styles.select} onClick={() => onSelect(device.id)}>
-                {device.serialNumber}
+                {orUnavailable(device.serialNumber)}
               </button>
             </td>
-            <td>{primaryImei(device.IMEIs)}</td>
-            <td>{device.modelMarketingName}</td>
-            <td>{device.state?.name}</td>
+            <td>{orUnavailable(primaryImei(device.IMEIs))}</td>
+            <td>{orUnavailable(device.modelMarketingName)}</td>
+            <td>{orUnavailable(device.state?.name)}</td>
             <td>{formatTimestamp(device.lastCheckin)}</td>
           </tr>
         ))}
