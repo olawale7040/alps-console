@@ -41,7 +41,7 @@ function startRequest(
   const promise = fetchGraphQL<unknown>(query, variables, controller.signal).then(
     (payload) => {
       if (entries.get(key) === entry) {
-        if (payload.data === undefined) entries.delete(key)
+        if (payload.data === undefined || payload.errors.length > 0) entries.delete(key)
         else entry.settledAt = Date.now()
       }
       return payload

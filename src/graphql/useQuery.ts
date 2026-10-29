@@ -80,10 +80,10 @@ export function useQuery<TData, TVars extends object = Record<string, never>>(
   )
 
   useEffect(() => {
-    // oxlint-disable-next-line react/set-state-in-effect
     if (fetchFirst) void execute(request.variables, false)
-    return abandonRequest
-  }, [fetchFirst, execute, request, abandonRequest])
+  }, [fetchFirst, execute, request])
+
+  useEffect(() => abandonRequest, [abandonRequest])
 
   const refetch = useCallback(
     (next?: TVars, replace = false) => {
