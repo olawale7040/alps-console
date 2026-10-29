@@ -1,5 +1,5 @@
-import { invalidateQueryKey, updateEntries } from '../../graphql/requestCache'
-import { scopeQueryKey, type TenantId } from '../../tenancy/tenants'
+import { invalidateQueryKey, updateEntries } from '../../../graphql/requestCache'
+import { scopeQueryKey, type TenantId } from '../../../tenancy/tenants'
 import type { DeviceDetailData, DeviceState, ListDevicesData } from './types'
 
 export const LIST_QUERY_KEY = 'devices:list'

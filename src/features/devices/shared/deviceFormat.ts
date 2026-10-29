@@ -1,4 +1,4 @@
-import type { Imei } from './types'
+import type { Imei } from '../api/types'
 
 const UNAVAILABLE = 'Unavailable'
 

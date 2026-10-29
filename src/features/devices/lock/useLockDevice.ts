@@ -1,18 +1,18 @@
 import { useState } from 'react'
-import { errorMessage } from '../../graphql/fetchGraphQL'
-import { useTenant } from '../../tenancy/tenantContext'
-import { useTenantMutation } from '../../tenancy/useTenantMutation'
-import { useTenantQuery } from '../../tenancy/useTenantQuery'
-import { actionsQueryKey, commitDeviceState, invalidateDevice } from './deviceCache'
-import { useDevicePatches } from './devicePatches'
-import { LOCKED_STATE } from './deviceStates'
-import { ASSIGN_ACTION, LIST_AVAILABLE_ACTIONS } from './operations'
+import { errorMessage } from '../../../graphql/fetchGraphQL'
+import { useTenant } from '../../../tenancy/tenantContext'
+import { useTenantMutation } from '../../../tenancy/useTenantMutation'
+import { useTenantQuery } from '../../../tenancy/useTenantQuery'
+import { actionsQueryKey, commitDeviceState, invalidateDevice } from '../api/deviceCache'
+import { useDevicePatches } from '../patches/devicePatches'
+import { LOCKED_STATE } from '../shared/deviceStates'
+import { ASSIGN_ACTION, LIST_AVAILABLE_ACTIONS } from '../api/operations'
 import type {
   AssignActionData,
   AssignActionVariables,
   AvailableActionsData,
   AvailableActionsVariables,
-} from './types'
+} from '../api/types'
 
 export function useLockDevice(deviceId: string, stateId: number | undefined, onLocked: () => void) {
   const { tenantId } = useTenant()

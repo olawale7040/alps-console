@@ -1,13 +1,13 @@
 import { useState } from 'react'
-import { QueryView } from '../../components/QueryView'
-import { useTenantQuery } from '../../tenancy/useTenantQuery'
-import { detailQueryKey } from './deviceCache'
-import { useDevicePatches, withPatch } from './devicePatches'
+import { QueryView } from '../../../components/QueryView'
+import { useTenantQuery } from '../../../tenancy/useTenantQuery'
+import { detailQueryKey } from '../api/deviceCache'
+import { useDevicePatches, withPatch } from '../patches/devicePatches'
 import { DeviceFacts } from './DeviceFacts'
 import { DeviceHistory } from './DeviceHistory'
-import { LockDevice } from './LockDevice'
-import { DEVICE_DETAIL } from './operations'
-import type { DeviceDetailData, DeviceDetailVariables } from './types'
+import { LockDevice } from '../lock/LockDevice'
+import { DEVICE_DETAIL } from '../api/operations'
+import type { DeviceDetailData, DeviceDetailVariables } from '../api/types'
 
 export function DeviceDetailPanel({ deviceId }: { deviceId: string }) {
   const { data, loading, errors } = useTenantQuery<DeviceDetailData, DeviceDetailVariables>(
