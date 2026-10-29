@@ -18,6 +18,7 @@ export function useLockDevice(deviceId: string, stateId: number | undefined, onL
   const { tenantId } = useTenant()
   const { setPatch, clearPatch } = useDevicePatches()
   const [error, setError] = useState<string>()
+  const [locked, setLocked] = useState(false)
 
   const actions = useTenantQuery<AvailableActionsData, AvailableActionsVariables>(
     LIST_AVAILABLE_ACTIONS,
@@ -39,6 +40,7 @@ export function useLockDevice(deviceId: string, stateId: number | undefined, onL
   const lock = async () => {
     if (!lockAction) return
     setError(undefined)
+    setLocked(false)
     setPatch(deviceId, { state: LOCKED_STATE })
     try {
       const result = await mutateData({ deviceId, actionId: lockAction.id })
@@ -46,15 +48,23 @@ export function useLockDevice(deviceId: string, stateId: number | undefined, onL
       commitDeviceState(tenantId, deviceId, LOCKED_STATE)
       clearPatch(deviceId)
       invalidateDevice(tenantId, deviceId)
+      setLocked(true)
       onLocked()
+    } catch (failure) {
       // TODO: a network failure (no response at all) is treated like a rejection, but the
       // server may have applied the lock. Refetch the device on that case instead of
       // assuming it did not.
-    } catch (failure) {
       clearPatch(deviceId)
       setError(errorMessage(failure))
     }
   }
 
-  return { canLock: lockAction !== undefined, locking: loading, error, lock }
+  return {
+    canLock: lockAction !== undefined,
+    locking: loading,
+    locked,
+    error,
+    actionsError: actions.errors.join('; '),
+    lock,
+  }
 }
