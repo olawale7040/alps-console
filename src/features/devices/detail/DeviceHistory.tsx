@@ -36,7 +36,7 @@ export function DeviceHistory({ deviceId, page, onPageChange }: DeviceHistoryPro
         loading={loading}
         errors={errors}
         data={data}
-        isEmpty={data !== undefined && entries.length === 0}
+        isEmpty={entries.length === 0}
         loadingLabel="Loading history…"
         emptyLabel="No history yet."
       >

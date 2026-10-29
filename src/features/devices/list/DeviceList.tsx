@@ -32,7 +32,7 @@ export function DeviceList({ selectedDeviceId, onSelect }: DeviceListProps) {
         loading={loading}
         errors={errors}
         data={data}
-        isEmpty={data !== undefined && devices.length === 0}
+        isEmpty={devices.length === 0}
         loadingLabel="Loading devices…"
         emptyLabel="No devices match your search."
       >

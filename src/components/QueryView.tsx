@@ -22,16 +22,15 @@ export function QueryView({
 }: QueryViewProps) {
   if (data === undefined) {
     if (errors.length > 0) return <Notice tone="error">{errors.join('; ')}</Notice>
-    if (loading) return <Notice>{loadingLabel}</Notice>
+    return loading ? <Notice>{loadingLabel}</Notice> : null
   }
-  if (isEmpty) return <Notice>{emptyLabel}</Notice>
 
   return (
     <>
-      {data !== undefined && errors.length > 0 && (
+      {errors.length > 0 && (
         <Notice tone="warning">Some data could not be loaded: {errors.join('; ')}</Notice>
       )}
-      {children}
+      {isEmpty ? <Notice>{emptyLabel}</Notice> : children}
     </>
   )
 }
