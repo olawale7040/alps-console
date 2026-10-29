@@ -76,6 +76,8 @@ export function useQuery<TData, TVars extends object = Record<string, never>>(
       try {
         const { data, errors } = await cached.promise
         if (isLatest()) setState({ data, errors, loading: false })
+        // TODO: transient network errors surface immediately. Retry with backoff would go
+        // here; it is out of scope for this exercise.
       } catch (error) {
         if (!isLatest()) return
         if (isAbortError(error)) setState((previous) => ({ ...previous, loading: false }))

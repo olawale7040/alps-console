@@ -7,6 +7,9 @@ export const detailQueryKey = (deviceId: string) => `device:${deviceId}:detail`
 export const historyQueryKey = (deviceId: string) => `device:${deviceId}:history`
 export const actionsQueryKey = (deviceId: string) => `device:${deviceId}:actions`
 
+// TODO: only the state is written into the cached rows. The list row's policy and
+// last check-in stay stale until the list next loads; the detail is corrected
+// by its refetch. Writing the full server result back would fix the row too.
 export function commitDeviceState(tenantId: TenantId, deviceId: string, state: DeviceState) {
   updateEntries(
     (entry) => entry.queryKey === scopeQueryKey(tenantId, LIST_QUERY_KEY),

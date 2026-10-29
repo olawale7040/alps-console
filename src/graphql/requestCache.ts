@@ -35,6 +35,9 @@ export interface RequestOptions {
   readonly force?: boolean
 }
 
+// TODO: entries are never evicted, except on a tenant switch or an invalidation, so
+// memory grows with every distinct search. Eviction or garbage collection is
+// skipped on purpose; an LRU cap would be the first thing to add.
 const entries = new Map<string, Entry>()
 const listeners = new Set<(event: CacheEvent) => void>()
 
@@ -151,6 +154,11 @@ export function updateEntries(
   }
 }
 
+// TODO: invalidation is by query key, so it can't answer which entries hold a
+// given device. Doing it by entity would mean recording entity ids from each
+// payload, which is normalisation, and that is skipped on purpose. Also, hooks
+// that run the same query and variables under different keys share one entry
+// that carries only the first key, so the others are not refetched.
 export function invalidateQueryKey(queryKey: string) {
   evictEntries((entry) => entry.queryKey === queryKey)
   emit({ type: 'invalidated', queryKey })
