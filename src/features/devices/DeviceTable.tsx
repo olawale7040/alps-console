@@ -1,3 +1,4 @@
+import { useDevicePatches, withPatch } from './devicePatches'
 import { formatTimestamp, primaryImei } from './deviceFormat'
 import type { DeviceSummary } from './types'
 import styles from './DeviceTable.module.css'
@@ -10,6 +11,9 @@ interface DeviceTableProps {
 }
 
 export function DeviceTable({ devices, selectedDeviceId, busy, onSelect }: DeviceTableProps) {
+  const { patches } = useDevicePatches()
+  const rows = devices.map((device) => withPatch(device, patches))
+
   return (
     <table className={styles.table} aria-busy={busy}>
       <thead>
@@ -22,7 +26,7 @@ export function DeviceTable({ devices, selectedDeviceId, busy, onSelect }: Devic
         </tr>
       </thead>
       <tbody>
-        {devices.map((device) => (
+        {rows.map((device) => (
           <tr key={device.id} aria-current={device.id === selectedDeviceId || undefined}>
             <td>
               <button type="button" className={styles.select} onClick={() => onSelect(device.id)}>

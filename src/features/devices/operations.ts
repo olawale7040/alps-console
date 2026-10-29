@@ -91,3 +91,20 @@ export const LIST_DEVICE_HISTORY = `
     }
   }
 `
+
+export const LIST_AVAILABLE_ACTIONS = `
+  query ListAvailableActions($tenantId: String, $stateId: String) {
+    listAvailableActions(tenantId: $tenantId, stateId: $stateId) {
+      id
+      actionName
+      policyName
+      stateId
+    }
+  }
+`
+
+export const ASSIGN_ACTION = `
+  mutation AssignAction($tenantId: String!, $deviceId: String!, $actionId: String!) {
+    assignAction(tenantId: $tenantId, deviceId: $deviceId, actionId: $actionId)
+  }
+`

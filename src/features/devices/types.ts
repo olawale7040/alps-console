@@ -81,3 +81,27 @@ export interface DeviceHistoryVariables {
   page: number
   pageSize: number
 }
+
+export interface DeviceAction {
+  id: string
+  actionName: string | null
+  policyName: string | null
+  stateId: number | null
+}
+
+export interface AvailableActionsData {
+  listAvailableActions: (DeviceAction | null)[] | null
+}
+
+export interface AvailableActionsVariables {
+  stateId: string
+}
+
+export interface AssignActionData {
+  assignAction: boolean | null
+}
+
+export interface AssignActionVariables {
+  deviceId: string
+  actionId: string
+}
