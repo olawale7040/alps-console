@@ -6,8 +6,15 @@ import './index.css'
 const root = document.getElementById('root')
 if (!root) throw new Error('Root element #root not found')
 
-createRoot(root).render(
-  <StrictMode>
-    <App />
-  </StrictMode>,
-)
+async function enableMocking() {
+  const { worker } = await import('./mocks/browser')
+  return worker.start({ onUnhandledRequest: 'bypass' })
+}
+
+enableMocking().then(() => {
+  createRoot(root).render(
+    <StrictMode>
+      <App />
+    </StrictMode>,
+  )
+})
