@@ -5,7 +5,7 @@ import {
   type UseMutationResult,
 } from '../graphql/useMutation'
 import { useTenant } from './tenantContext'
-import type { TenantVariables } from './tenants'
+import { withTenant, type TenantVariables } from './tenants'
 
 export function useTenantMutation<TData, TVars extends object = Record<string, never>>(
   query: string,
@@ -13,14 +13,13 @@ export function useTenantMutation<TData, TVars extends object = Record<string, n
 ): UseMutationResult<TData, TVars> {
   const { tenantId } = useTenant()
   const result = useMutation<TData, TVars & TenantVariables>(query, {
-    variables: { ...variables, tenantId } as TVars & TenantVariables,
+    variables: withTenant(variables, tenantId),
     throwError,
   })
   const { mutateData } = result
 
   const mutateForTenant = useCallback(
-    (next?: TVars, replace?: boolean) =>
-      mutateData({ ...next, tenantId } as TVars & TenantVariables, replace),
+    (next?: TVars, replace?: boolean) => mutateData(withTenant(next, tenantId), replace),
     [mutateData, tenantId],
   )
 

@@ -10,5 +10,7 @@ export interface TenantVariables {
 export const scopeQueryKey = (tenantId: TenantId, queryKey: string): string =>
   `${tenantId}:${queryKey}`
 
-export const isTenantVariables = (variables: object): variables is TenantVariables =>
-  'tenantId' in variables
+export const withTenant = <TVars extends object>(
+  variables: TVars | undefined,
+  tenantId: TenantId,
+): TVars & TenantVariables => ({ ...variables, tenantId }) as TVars & TenantVariables

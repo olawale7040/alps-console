@@ -1,7 +1,7 @@
 import { useCallback, useMemo, useState, type ReactNode } from 'react'
-import { evictEntries } from '../graphql/requestCache'
 import { TenantContext } from './tenantContext'
-import { DEFAULT_TENANT_ID, isTenantVariables, type TenantId } from './tenants'
+import { evictOtherTenants } from './tenantCache'
+import { DEFAULT_TENANT_ID, type TenantId } from './tenants'
 
 interface TenantProviderProps {
   initialTenantId?: TenantId
@@ -15,7 +15,7 @@ export function TenantProvider({
   const [tenantId, setTenantId] = useState(initialTenantId)
 
   const switchTenant = useCallback((next: TenantId) => {
-    evictEntries(({ variables }) => !isTenantVariables(variables) || variables.tenantId !== next)
+    evictOtherTenants(next)
     setTenantId(next)
   }, [])
 
