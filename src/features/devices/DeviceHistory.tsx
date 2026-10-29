@@ -2,6 +2,7 @@ import { useState } from 'react'
 import { Pagination } from '../../components/Pagination'
 import { QueryView } from '../../components/QueryView'
 import { useTenantQuery } from '../../tenancy/useTenantQuery'
+import { historyQueryKey } from './deviceCache'
 import { formatTimestamp, orUnavailable } from './deviceFormat'
 import { LIST_DEVICE_HISTORY } from './operations'
 import { pageCount } from './pagination'
@@ -17,7 +18,7 @@ export function DeviceHistory({ deviceId }: { deviceId: string }) {
     {
       variables: { deviceId, page, pageSize: HISTORY_PAGE_SIZE },
       fetchFirst: true,
-      queryKey: `device:${deviceId}:history`,
+      queryKey: historyQueryKey(deviceId),
     },
   )
 

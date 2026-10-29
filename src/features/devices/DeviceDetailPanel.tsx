@@ -1,15 +1,19 @@
 import { QueryView } from '../../components/QueryView'
 import { useTenantQuery } from '../../tenancy/useTenantQuery'
+import { detailQueryKey } from './deviceCache'
+import { useDevicePatches, withPatch } from './devicePatches'
 import { DeviceFacts } from './DeviceFacts'
 import { DeviceHistory } from './DeviceHistory'
+import { LockDevice } from './LockDevice'
 import { DEVICE_DETAIL } from './operations'
 import type { DeviceDetailData, DeviceDetailVariables } from './types'
 
 export function DeviceDetailPanel({ deviceId }: { deviceId: string }) {
   const { data, loading, errors } = useTenantQuery<DeviceDetailData, DeviceDetailVariables>(
     DEVICE_DETAIL,
-    { variables: { deviceId }, fetchFirst: true, queryKey: `device:${deviceId}:detail` },
+    { variables: { deviceId }, fetchFirst: true, queryKey: detailQueryKey(deviceId) },
   )
+  const { patches } = useDevicePatches()
   const detail = data?.deviceDetail
 
   return (
@@ -22,7 +26,12 @@ export function DeviceDetailPanel({ deviceId }: { deviceId: string }) {
         loadingLabel="Loading device…"
         emptyLabel="Device not found."
       >
-        {detail && <DeviceFacts detail={detail} />}
+        {detail && (
+          <>
+            <DeviceFacts detail={withPatch(detail, patches)} />
+            <LockDevice deviceId={deviceId} stateId={detail.state?.id} />
+          </>
+        )}
       </QueryView>
       <DeviceHistory deviceId={deviceId} />
     </section>

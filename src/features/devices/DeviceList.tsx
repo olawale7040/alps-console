@@ -1,6 +1,7 @@
 import { Pagination } from '../../components/Pagination'
 import { QueryView } from '../../components/QueryView'
 import { useTenantQuery } from '../../tenancy/useTenantQuery'
+import { LIST_QUERY_KEY } from './deviceCache'
 import { DEVICE_PAGE_SIZE, toListVariables } from './deviceFilters'
 import { DeviceFilterBar } from './DeviceFilterBar'
 import { DeviceTable } from './DeviceTable'
@@ -18,7 +19,7 @@ export function DeviceList({ selectedDeviceId, onSelect }: DeviceListProps) {
   const { filters, dispatch } = useDeviceFilters()
   const { data, loading, errors } = useTenantQuery<ListDevicesData, ListDevicesVariables>(
     LIST_DEVICES,
-    { variables: toListVariables(filters), fetchFirst: true, queryKey: 'devices:list' },
+    { variables: toListVariables(filters), fetchFirst: true, queryKey: LIST_QUERY_KEY },
   )
 
   const devices = data?.listDevices?.deviceList ?? []
