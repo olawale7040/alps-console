@@ -1,6 +1,6 @@
 import type { ActionDispatch } from 'react'
 import type { DeviceFilters, DeviceFiltersAction } from './deviceFilters'
-import { DEVICE_STATES } from './deviceStates'
+import { DEVICE_STATES } from '../shared/deviceStates'
 import styles from './DeviceFilterBar.module.css'
 
 interface DeviceFilterBarProps {

@@ -1,8 +1,8 @@
 import { useState } from 'react'
 import { Notice } from './components/Notice'
-import { DeviceDetailPanel } from './features/devices/DeviceDetailPanel'
-import { DeviceList } from './features/devices/DeviceList'
-import { DevicePatchesProvider } from './features/devices/DevicePatchesProvider'
+import { DeviceDetailPanel } from './features/devices/detail/DeviceDetailPanel'
+import { DeviceList } from './features/devices/list/DeviceList'
+import { DevicePatchesProvider } from './features/devices/patches/DevicePatchesProvider'
 import styles from './DevicesPage.module.css'
 
 export function DevicesPage() {

@@ -1,4 +1,4 @@
-import { Notice } from '../../components/Notice'
+import { Notice } from '../../../components/Notice'
 import { useLockDevice } from './useLockDevice'
 
 interface LockDeviceProps {

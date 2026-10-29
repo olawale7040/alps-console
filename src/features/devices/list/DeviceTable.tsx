@@ -1,6 +1,6 @@
-import { useDevicePatches, withPatch } from './devicePatches'
-import { formatTimestamp, orUnavailable, primaryImei } from './deviceFormat'
-import type { DeviceSummary } from './types'
+import { useDevicePatches, withPatch } from '../patches/devicePatches'
+import { formatTimestamp, orUnavailable, primaryImei } from '../shared/deviceFormat'
+import type { DeviceSummary } from '../api/types'
 import styles from './DeviceTable.module.css'
 
 interface DeviceTableProps {

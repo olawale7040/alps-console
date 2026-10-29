@@ -1,5 +1,5 @@
-import { formatTimestamp, orUnavailable, primaryImei } from './deviceFormat'
-import type { DeviceDetail } from './types'
+import { formatTimestamp, orUnavailable, primaryImei } from '../shared/deviceFormat'
+import type { DeviceDetail } from '../api/types'
 import styles from './DeviceFacts.module.css'
 
 export function DeviceFacts({ detail }: { detail: DeviceDetail }) {

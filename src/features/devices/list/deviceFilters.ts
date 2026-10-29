@@ -1,4 +1,4 @@
-import type { ListDevicesVariables } from './types'
+import type { ListDevicesVariables } from '../api/types'
 
 export const DEVICE_PAGE_SIZE = 10
 

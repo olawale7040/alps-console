@@ -1,5 +1,5 @@
 import { createContext, useContext } from 'react'
-import type { DeviceState } from './types'
+import type { DeviceState } from '../api/types'
 
 export interface DevicePatch {
   readonly state: DeviceState
