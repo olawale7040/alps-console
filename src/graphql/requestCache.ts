@@ -12,6 +12,17 @@ interface Entry {
   readonly promise: Promise<QueryPayload<unknown>>
   refs: number
   settledAt: number | null
+  payload: QueryPayload<unknown> | null
+}
+
+export type CacheEvent =
+  | { readonly type: 'updated'; readonly key: string; readonly payload: QueryPayload<unknown> }
+  | { readonly type: 'invalidated'; readonly queryKey: string }
+
+export interface EntryInfo {
+  readonly query: string
+  readonly variables: object
+  readonly queryKey: string | undefined
 }
 
 export interface CachedRequest<TData> {
@@ -25,6 +36,16 @@ export interface RequestOptions {
 }
 
 const entries = new Map<string, Entry>()
+const listeners = new Set<(event: CacheEvent) => void>()
+
+const emit = (event: CacheEvent) => listeners.forEach((listener) => listener(event))
+
+export function subscribeToCache(listener: (event: CacheEvent) => void): () => void {
+  listeners.add(listener)
+  return () => {
+    listeners.delete(listener)
+  }
+}
 
 const isInFlight = (entry: Entry): boolean => entry.settledAt === null
 
@@ -42,7 +63,10 @@ function startRequest(
     (payload) => {
       if (entries.get(key) === entry) {
         if (payload.data === undefined || payload.errors.length > 0) entries.delete(key)
-        else entry.settledAt = Date.now()
+        else {
+          entry.settledAt = Date.now()
+          entry.payload = payload
+        }
       }
       return payload
     },
@@ -51,7 +75,16 @@ function startRequest(
       throw error
     },
   )
-  const entry: Entry = { query, variables, queryKey, controller, promise, refs: 0, settledAt: null }
+  const entry: Entry = {
+    query,
+    variables,
+    queryKey,
+    controller,
+    promise,
+    refs: 0,
+    settledAt: null,
+    payload: null,
+  }
   entries.set(key, entry)
   return entry
 }
@@ -83,8 +116,10 @@ export function fetchCached<TData>(
   const reusable = existing && (isInFlight(existing) || (!force && isFresh(existing)))
   const entry = reusable ? existing : startRequest(key, query, variables, queryKey)
 
+  const promise = entry.payload ? Promise.resolve(entry.payload) : entry.promise
+
   return {
-    promise: entry.promise as Promise<QueryPayload<TData>>,
+    promise: promise as Promise<QueryPayload<TData>>,
     release: acquire(key, entry),
   }
 }
@@ -97,18 +132,28 @@ export function cancelRequests(queryKey: string) {
   }
 }
 
-export function evictEntries(
-  shouldEvict: (entry: {
-    query: string
-    variables: object
-    queryKey: string | undefined
-  }) => boolean,
-) {
+export function evictEntries(shouldEvict: (entry: EntryInfo) => boolean) {
   for (const [key, entry] of entries) {
     if (!shouldEvict(entry)) continue
     if (isInFlight(entry)) entry.controller.abort()
     entries.delete(key)
   }
+}
+
+export function updateEntries(
+  matches: (entry: EntryInfo) => boolean,
+  update: (data: unknown) => unknown,
+) {
+  for (const [key, entry] of entries) {
+    if (!entry.payload || entry.payload.data === undefined || !matches(entry)) continue
+    entry.payload = { data: update(entry.payload.data), errors: entry.payload.errors }
+    emit({ type: 'updated', key, payload: entry.payload })
+  }
+}
+
+export function invalidateQueryKey(queryKey: string) {
+  evictEntries((entry) => entry.queryKey === queryKey)
+  emit({ type: 'invalidated', queryKey })
 }
 
 export function clearCache() {

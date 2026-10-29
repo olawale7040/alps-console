@@ -1,6 +1,7 @@
 import { useCallback, useEffect, useRef, useState } from 'react'
 import { errorMessage, isAbortError } from './fetchGraphQL'
-import { cancelRequests, fetchCached } from './requestCache'
+import { cancelRequests, fetchCached, subscribeToCache } from './requestCache'
+import { requestKey } from './stableKey'
 import { useStableValue } from './useStableValue'
 
 export interface UseQueryOptions<TVars> {
@@ -43,6 +44,7 @@ export function useQuery<TData, TVars extends object = Record<string, never>>(
   const [observedRequest, setObservedRequest] = useState(request)
   const latestRequest = useRef(0)
   const releaseRequest = useRef(noop)
+  const activeRequest = useRef<{ key: string; variables: TVars | undefined } | null>(null)
 
   if (observedRequest !== request) {
     setObservedRequest(request)
@@ -59,6 +61,10 @@ export function useQuery<TData, TVars extends object = Record<string, never>>(
     async (requestVariables: TVars | undefined, force: boolean) => {
       abandonRequest()
       const requestId = latestRequest.current
+      activeRequest.current = {
+        key: requestKey(request.query, requestVariables ?? {}),
+        variables: requestVariables,
+      }
       const isLatest = () => requestId === latestRequest.current
 
       const cached = fetchCached<TData>(request.query, requestVariables ?? {}, {
@@ -84,6 +90,23 @@ export function useQuery<TData, TVars extends object = Record<string, never>>(
   }, [fetchFirst, execute, request])
 
   useEffect(() => abandonRequest, [abandonRequest])
+
+  useEffect(
+    () =>
+      subscribeToCache((event) => {
+        const active = activeRequest.current
+        if (!active) return
+        if (event.type === 'updated') {
+          if (event.key !== active.key) return
+          const { data, errors } = event.payload
+          setState((previous) => ({ ...previous, data: data as TData, errors }))
+        } else if (event.queryKey === request.queryKey) {
+          setState(startLoading)
+          void execute(active.variables, true)
+        }
+      }),
+    [request.queryKey, execute],
+  )
 
   const refetch = useCallback(
     (next?: TVars, replace = false) => {
