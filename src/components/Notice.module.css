@@ -1,0 +1,22 @@
+.info,
+.warning,
+.error {
+  margin: 0.5rem 0;
+  padding: 0.5rem 0.75rem;
+  border-radius: 4px;
+  border: 1px solid;
+}
+
+.info {
+  border-color: #8884;
+}
+
+.warning {
+  border-color: #c98a1b;
+  background: #c98a1b22;
+}
+
+.error {
+  border-color: #b3261e;
+  background: #b3261e22;
+}
