@@ -41,3 +41,53 @@ export const LIST_DEVICES = `
     }
   }
 `
+
+export const DEVICE_DETAIL = `
+  query DeviceDetail($tenantId: String!, $deviceId: String!) {
+    deviceDetail(tenantId: $tenantId, deviceId: $deviceId) {
+      id
+      serialNumber
+      deviceBrandName
+      deviceModelMarketingName
+      imsi
+      locale
+      firstEnrollAt
+      IMEIs {
+        imei
+        isPrimary
+      }
+      state {
+        id
+        name
+      }
+      policy {
+        id
+        name
+        color
+      }
+      lastCheckin {
+        label
+        date
+        color
+      }
+    }
+  }
+`
+
+export const LIST_DEVICE_HISTORY = `
+  query ListDeviceHistory($tenantId: String!, $deviceId: String!, $page: Int, $pageSize: Int) {
+    listDeviceHistory(tenantId: $tenantId, deviceId: $deviceId, page: $page, pageSize: $pageSize) {
+      pageInfo {
+        total_count
+      }
+      histories {
+        type
+        createdAt
+        email
+        policyName
+        nextPolicyName
+        actionName
+      }
+    }
+  }
+`

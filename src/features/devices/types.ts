@@ -40,3 +40,44 @@ export interface ListDevicesVariables {
   page: number
   pageSize: number
 }
+
+export interface DeviceDetail {
+  id: string
+  serialNumber: string | null
+  deviceBrandName: string | null
+  deviceModelMarketingName: string | null
+  IMEIs: Imei[] | null
+  imsi: string | null
+  locale: string | null
+  state: DeviceState | null
+  policy: Policy | null
+  lastCheckin: { label: string | null; date: string | null; color: string | null } | null
+  firstEnrollAt: string | null
+}
+
+export interface DeviceDetailData {
+  deviceDetail: DeviceDetail | null
+}
+
+export interface DeviceDetailVariables {
+  deviceId: string
+}
+
+export interface HistoryEntry {
+  type: string | null
+  createdAt: string | null
+  email: string | null
+  policyName: string | null
+  nextPolicyName: string | null
+  actionName: string | null
+}
+
+export interface DeviceHistoryData {
+  listDeviceHistory: { pageInfo: PageInfo | null; histories: HistoryEntry[] | null } | null
+}
+
+export interface DeviceHistoryVariables {
+  deviceId: string
+  page: number
+  pageSize: number
+}
