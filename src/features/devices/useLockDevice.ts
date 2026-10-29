@@ -14,7 +14,7 @@ import type {
   AvailableActionsVariables,
 } from './types'
 
-export function useLockDevice(deviceId: string, stateId: number | undefined) {
+export function useLockDevice(deviceId: string, stateId: number | undefined, onLocked: () => void) {
   const { tenantId } = useTenant()
   const { setPatch, clearPatch } = useDevicePatches()
   const [error, setError] = useState<string>()
@@ -46,6 +46,7 @@ export function useLockDevice(deviceId: string, stateId: number | undefined) {
       commitDeviceState(tenantId, deviceId, LOCKED_STATE)
       clearPatch(deviceId)
       invalidateDevice(tenantId, deviceId)
+      onLocked()
     } catch (failure) {
       clearPatch(deviceId)
       setError(errorMessage(failure))

@@ -1,3 +1,4 @@
+import { useState } from 'react'
 import { QueryView } from '../../components/QueryView'
 import { useTenantQuery } from '../../tenancy/useTenantQuery'
 import { detailQueryKey } from './deviceCache'
@@ -14,6 +15,7 @@ export function DeviceDetailPanel({ deviceId }: { deviceId: string }) {
     { variables: { deviceId }, fetchFirst: true, queryKey: detailQueryKey(deviceId) },
   )
   const { patches } = useDevicePatches()
+  const [historyPage, setHistoryPage] = useState(1)
   const detail = data?.deviceDetail
 
   return (
@@ -29,11 +31,15 @@ export function DeviceDetailPanel({ deviceId }: { deviceId: string }) {
         {detail && (
           <>
             <DeviceFacts detail={withPatch(detail, patches)} />
-            <LockDevice deviceId={deviceId} stateId={detail.state?.id} />
+            <LockDevice
+              deviceId={deviceId}
+              stateId={detail.state?.id}
+              onLocked={() => setHistoryPage(1)}
+            />
           </>
         )}
       </QueryView>
-      <DeviceHistory deviceId={deviceId} />
+      <DeviceHistory deviceId={deviceId} page={historyPage} onPageChange={setHistoryPage} />
     </section>
   )
 }
