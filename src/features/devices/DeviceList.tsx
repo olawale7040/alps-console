@@ -42,12 +42,15 @@ export function DeviceList({ selectedDeviceId, onSelect }: DeviceListProps) {
           busy={loading}
           onSelect={onSelect}
         />
+      </QueryView>
+      {totalCount > 0 && (
         <Pagination
+          label="Devices pagination"
           page={filters.page}
           pageCount={pageCount(totalCount, DEVICE_PAGE_SIZE)}
           onPageChange={(page) => dispatch({ type: 'pageChanged', page })}
         />
-      </QueryView>
+      )}
     </section>
   )
 }

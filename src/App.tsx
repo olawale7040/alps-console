@@ -1,3 +1,4 @@
+import { ErrorBoundary } from './components/ErrorBoundary'
 import { DevicesPage } from './DevicesPage'
 import { TenantBoundary } from './tenancy/TenantBoundary'
 import { TenantProvider } from './tenancy/TenantProvider'
@@ -13,7 +14,9 @@ export function App() {
       </header>
       <main className={styles.main}>
         <TenantBoundary>
-          <DevicesPage />
+          <ErrorBoundary>
+            <DevicesPage />
+          </ErrorBoundary>
         </TenantBoundary>
       </main>
     </TenantProvider>

@@ -53,12 +53,15 @@ export function DeviceHistory({ deviceId, page, onPageChange }: DeviceHistoryPro
             </li>
           ))}
         </ol>
+      </QueryView>
+      {totalCount > 0 && (
         <Pagination
+          label="History pagination"
           page={page}
           pageCount={pageCount(totalCount, HISTORY_PAGE_SIZE)}
           onPageChange={onPageChange}
         />
-      </QueryView>
+      )}
     </section>
   )
 }
