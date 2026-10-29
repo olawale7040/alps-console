@@ -16,7 +16,7 @@ npm run dev
 Then open the URL Vite prints, usually http://localhost:5173.
 
 ```bash
-npm test          # race and rollback tests
+npm test          # hook tests and user-flow tests
 npm run typecheck
 npm run lint
 npm run build

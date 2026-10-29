@@ -60,7 +60,7 @@ export function useLockDevice(deviceId: string, stateId: number | undefined, onL
   }
 
   return {
-    canLock: lockAction !== undefined,
+    canLock: lockAction !== undefined && !actions.loading,
     locking: loading,
     locked,
     error,
