@@ -16,7 +16,7 @@ npm run dev
 Then open the URL Vite prints, usually http://localhost:5173.
 
 ```bash
-npm test          # hook tests and user-flow tests
+npm test
 npm run typecheck
 npm run lint
 npm run build
@@ -30,7 +30,7 @@ npm run build
 - `SN-0000-POISON` returns partial data with errors, to show how that is handled.
 - Lock a device from its detail panel. The state changes straight away and is undone if the server rejects it.
 
-## Where things are
+## Project structure
 
 - `src/graphql` is the data layer: transport, request cache, `useQuery` and `useMutation`.
 - `src/tenancy` holds the tenant context and the hooks that add the tenant to every request.
