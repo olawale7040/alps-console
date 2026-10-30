@@ -1,27 +1,27 @@
-import { formatTimestamp, orUnavailable, primaryImei } from '../shared/deviceFormat'
+import { formatTimestamp, primaryImei, valueOrUnavailable } from '../shared/deviceFormat'
 import type { DeviceDetail } from '../api/types'
 import styles from './DeviceFacts.module.css'
 
 export function DeviceFacts({ detail }: { detail: DeviceDetail }) {
-  const facts: [string, string][] = [
-    ['Serial number', orUnavailable(detail.serialNumber)],
-    ['Model', orUnavailable(detail.deviceModelMarketingName)],
-    ['Brand', orUnavailable(detail.deviceBrandName)],
-    ['IMEI', orUnavailable(primaryImei(detail.IMEIs))],
-    ['IMSI', orUnavailable(detail.imsi)],
-    ['State', orUnavailable(detail.state?.name)],
-    ['Policy', orUnavailable(detail.policy?.name)],
-    ['Locale', orUnavailable(detail.locale)],
-    ['Last check-in', formatTimestamp(detail.lastCheckin?.date ?? null)],
-    ['First enrolled', formatTimestamp(detail.firstEnrollAt)],
+  const facts = [
+    { label: 'Serial number', value: detail.serialNumber },
+    { label: 'Model', value: detail.deviceModelMarketingName },
+    { label: 'Brand', value: detail.deviceBrandName },
+    { label: 'IMEI', value: primaryImei(detail.IMEIs) },
+    { label: 'IMSI', value: detail.imsi },
+    { label: 'State', value: detail.state?.name },
+    { label: 'Policy', value: detail.policy?.name },
+    { label: 'Locale', value: detail.locale },
+    { label: 'Last check-in', value: formatTimestamp(detail.lastCheckin?.date) },
+    { label: 'First enrolled', value: formatTimestamp(detail.firstEnrollAt) },
   ]
 
   return (
     <dl className={styles.facts}>
-      {facts.map(([label, value]) => (
+      {facts.map(({ label, value }) => (
         <div key={label}>
           <dt>{label}</dt>
-          <dd>{value}</dd>
+          <dd>{valueOrUnavailable(value)}</dd>
         </div>
       ))}
     </dl>

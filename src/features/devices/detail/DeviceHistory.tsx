@@ -2,7 +2,7 @@ import { Pagination } from '../../../components/Pagination'
 import { QueryView } from '../../../components/QueryView'
 import { useTenantQuery } from '../../../tenancy/useTenantQuery'
 import { historyQueryKey } from '../api/deviceCache'
-import { formatTimestamp, orUnavailable } from '../shared/deviceFormat'
+import { formatTimestamp, valueOrUnavailable } from '../shared/deviceFormat'
 import { LIST_DEVICE_HISTORY } from '../api/operations'
 import { pageCount } from '../shared/pagination'
 import type { DeviceHistoryData, DeviceHistoryVariables } from '../api/types'
@@ -43,12 +43,13 @@ export function DeviceHistory({ deviceId, page, onPageChange }: DeviceHistoryPro
         <ol className={styles.entries} aria-busy={loading}>
           {entries.map((entry, index) => (
             <li key={`${entry.createdAt}-${index}`}>
-              <strong>{orUnavailable(entry.actionName)}</strong>
+              <strong>{valueOrUnavailable(entry.actionName)}</strong>
               <span>
-                {orUnavailable(entry.policyName)} → {orUnavailable(entry.nextPolicyName)}
+                {valueOrUnavailable(entry.policyName)} → {valueOrUnavailable(entry.nextPolicyName)}
               </span>
               <small>
-                {formatTimestamp(entry.createdAt)} · {orUnavailable(entry.email)}
+                {valueOrUnavailable(formatTimestamp(entry.createdAt))} ·{' '}
+                {valueOrUnavailable(entry.email)}
               </small>
             </li>
           ))}
