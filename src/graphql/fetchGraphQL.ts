@@ -29,11 +29,8 @@ export const errorMessage = (error: unknown): string =>
   error instanceof Error ? error.message : 'Unknown error'
 
 export class GraphQLRequestError extends Error {
-  readonly messages: readonly string[]
-
   constructor(messages: readonly string[]) {
     super(messages.join('; '))
     this.name = 'GraphQLRequestError'
-    this.messages = messages
   }
 }
