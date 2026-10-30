@@ -37,6 +37,4 @@ Next I'd add a Retry button, check responses at runtime, move the endpoint and t
 ## Things I noticed
 
 - The pasted `handlers.ts` had broken comments and no indentation. I fixed that and made type-only changes for strict mode. The behaviour is the same.
-- `msw` is pinned to version 2, because version 3 no longer exports `graphql` from the main package.
 - `listDevices` joins `imei` and `serialNumber` with AND, so a search term goes to one of them: all digits is an IMEI, anything else is a serial number.
-- The server only rejects locking a device that is already locked, and the UI hides Lock for those, so the tests force the rollback.
