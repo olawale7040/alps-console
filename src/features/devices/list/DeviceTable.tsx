@@ -1,5 +1,5 @@
 import { useDevicePatches, withPatch } from '../patches/devicePatches'
-import { formatTimestamp, orUnavailable, primaryImei } from '../shared/deviceFormat'
+import { formatTimestamp, valueOrUnavailable, primaryImei } from '../shared/deviceFormat'
 import type { DeviceSummary } from '../api/types'
 import styles from './DeviceTable.module.css'
 
@@ -30,13 +30,13 @@ export function DeviceTable({ devices, selectedDeviceId, busy, onSelect }: Devic
           <tr key={device.id} aria-current={device.id === selectedDeviceId || undefined}>
             <td>
               <button type="button" className={styles.select} onClick={() => onSelect(device.id)}>
-                {orUnavailable(device.serialNumber)}
+                {valueOrUnavailable(device.serialNumber)}
               </button>
             </td>
-            <td>{orUnavailable(primaryImei(device.IMEIs))}</td>
-            <td>{orUnavailable(device.modelMarketingName)}</td>
-            <td>{orUnavailable(device.state?.name)}</td>
-            <td>{formatTimestamp(device.lastCheckin)}</td>
+            <td>{valueOrUnavailable(primaryImei(device.IMEIs))}</td>
+            <td>{valueOrUnavailable(device.modelMarketingName)}</td>
+            <td>{valueOrUnavailable(device.state?.name)}</td>
+            <td>{valueOrUnavailable(formatTimestamp(device.lastCheckin))}</td>
           </tr>
         ))}
       </tbody>

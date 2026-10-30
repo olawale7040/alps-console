@@ -1,4 +1,4 @@
-import type { ActionDispatch } from 'react'
+import type { ActionDispatch, ChangeEvent } from 'react'
 import type { DeviceFilters, DeviceFiltersAction } from './deviceFilters'
 import { DEVICE_STATES } from '../shared/deviceStates'
 import styles from './DeviceFilterBar.module.css'
@@ -9,6 +9,15 @@ interface DeviceFilterBarProps {
 }
 
 export function DeviceFilterBar({ filters, dispatch }: DeviceFilterBarProps) {
+  const handleSearchChange = (event: ChangeEvent<HTMLInputElement>) => {
+    dispatch({ type: 'inputChanged', input: event.target.value })
+  }
+
+  const handleStateChange = (event: ChangeEvent<HTMLSelectElement>) => {
+    const { value } = event.target
+    dispatch({ type: 'stateChanged', stateId: value ? Number(value) : undefined })
+  }
+
   return (
     <div className={styles.filters}>
       <input
@@ -16,17 +25,12 @@ export function DeviceFilterBar({ filters, dispatch }: DeviceFilterBarProps) {
         value={filters.input}
         placeholder="Search IMEI or serial number"
         aria-label="Search devices"
-        onChange={(event) => dispatch({ type: 'inputChanged', input: event.target.value })}
+        onChange={handleSearchChange}
       />
       <select
         value={filters.stateId ?? ''}
         aria-label="Filter by state"
-        onChange={(event) =>
-          dispatch({
-            type: 'stateChanged',
-            stateId: event.target.value ? Number(event.target.value) : undefined,
-          })
-        }
+        onChange={handleStateChange}
       >
         <option value="">All states</option>
         {DEVICE_STATES.map((state) => (
